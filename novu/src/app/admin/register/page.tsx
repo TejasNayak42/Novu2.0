@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export default function Login() {
+export default function Register() {
   return (
     <div className="min-h-[100dvh] flex justify-center items-center">
       <div className="w-full lg:grid lg:grid-cols-2">
