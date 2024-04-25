@@ -4,9 +4,8 @@ import Link from "next/link";
 const Footer = () => {
   return (
     <div className="flex w-full text-primary/75 dark:text-primary/50 text-sm tracking-wide items-center py-10 space-x-1">
-      <p>made on earth with</p> <Heart className="w-[1rem] h-[1rem]" />{" "}
+      <p>made on earth by</p>
       <div>
-        by{" "}
         <Link
           href="https://srajan.vercel.app"
           target="_blank"

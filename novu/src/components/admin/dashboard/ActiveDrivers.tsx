@@ -32,7 +32,7 @@ export default function ActiveDrivers() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow className="bg-accent">
+            <TableRow>
               <TableCell>
                 <div className="font-medium">Liam Johnson</div>
                 <div className="hidden text-sm text-muted-foreground md:inline">
