@@ -1,0 +1,1 @@
+ return token.slice(0, 16);

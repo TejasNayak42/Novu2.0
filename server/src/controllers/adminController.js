@@ -1,10 +1,6 @@
-import express from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { AdminModel } from "../models/Admin.js";
-
-const router = express.Router();
-export { router as userRouter };
 
 async function registerAdmin(req, res) {
   const { username, phone, email, password } = req.body;
@@ -48,7 +44,7 @@ async function loginAdmin(req, res) {
   }
 
   const user = await AdminModel.findOne({ username });
-  if (user) {
+  if (!user) {
     return res.status(400).json({ message: "User doesn't exist" });
   }
 
@@ -59,8 +55,22 @@ async function loginAdmin(req, res) {
       .json({ message: "username or password is incorrect!" });
   }
 
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+  const token = jwt.sign({ id: user._id }, "secret");
   res.json({ token, userID: user._id });
 }
 
-export { registerAdmin, loginAdmin };
+async function getUserInfo(req, res) {
+  // Check if user is authorized (logged in)
+  if (!req.user) {
+    return res.status(401).json({ message: "Unauthorized access!" });
+  }
+
+  try {
+    const users = await AdminModel.find();
+    res.json(users);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error getting users" });
+  }
+}
+export { registerAdmin, loginAdmin, getUserInfo };
