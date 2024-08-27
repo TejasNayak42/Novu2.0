@@ -11,4 +11,4 @@ export { router as userRouter };
 
 router.post("/register", registerAdmin);
 router.post("/login", loginAdmin);
-router.get("/", getUserInfo);
+router.get("/", verifyToken, getUserInfo);

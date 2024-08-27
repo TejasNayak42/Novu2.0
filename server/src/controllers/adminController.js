@@ -28,7 +28,7 @@ async function registerAdmin(req, res) {
     username,
     phone,
     email,
-    passowrd: hashedPassword,
+    password: hashedPassword,
   });
   await newUser.save();
   res.json({ message: "User registered succesfully !" });

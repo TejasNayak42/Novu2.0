@@ -7,10 +7,10 @@ function verifyToken(req, res, next) {
     return res.status(401).json({ message: "unauthorized" });
   }
 
-  const token = authHeader.split("")[1];
+  const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, "secret");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
     next();
   } catch (err) {
