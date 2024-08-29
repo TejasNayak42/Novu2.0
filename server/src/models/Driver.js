@@ -18,7 +18,6 @@ const DriverSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator: (value) => {
-        // Check if the date is in the format DD-MM-YYYY
         return /^\d{2}-\d{2}-\d{4}$/.test(value);
       },
       message: (props) =>
@@ -45,8 +44,13 @@ const DriverSchema = new mongoose.Schema({
   bio: { type: String },
   userOwner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "drivers",
+    ref: "admins",
     required: true,
+  },
+  password: {
+    type: String,
+    required: [true, "Please add a password"],
+    minLength: [6, "Password must be atleast 6 characters"],
   },
   busID: { type: String, required: true },
   routeID: { type: String, required: true },
