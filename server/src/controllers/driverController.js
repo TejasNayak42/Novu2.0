@@ -103,4 +103,29 @@ async function loginDriver(req, res) {
   }
 }
 
-export { registerDriver, loginDriver };
+async function updateDriverRoute(req, res) {
+  const { driverID, from, to, routeID, busID } = req.body;
+
+  if (!driverID || !from || !to || !routeID || !busID) {
+    return res.status(400).json({ message: "Please provide all requirements" });
+  }
+
+  try {
+    const updatedDriver = await DriverModel.findByIdAndUpdate(
+      driverID,
+      { from, to, routeID, busID },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedDriver) {
+      return res.status(404).json({ message: "Driver not found!" });
+    }
+
+    res.status(200).json({ message: "Driver route updated successfully !" });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Error updatingg driver route !" });
+  }
+}
+
+export { registerDriver, loginDriver, updateDriverRoute };
