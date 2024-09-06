@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { AdminModel } from "../models/Admin.js";
+import { DriverModel } from "../models/Driver.js";
+import mongoose from "mongoose";
 
 async function registerAdmin(req, res) {
   const { username, phone, email, password } = req.body;
@@ -73,4 +75,25 @@ async function getUserInfo(req, res) {
     res.status(500).json({ message: "Error getting users" });
   }
 }
-export { registerAdmin, loginAdmin, getUserInfo };
+
+async function deleteDriver(req, res) {
+  try {
+    const driverId = req.params.driverId;
+
+    const castDriverId = new mongoose.Types.ObjectId(driverId);
+
+    const driver = await DriverModel.findById(castDriverId);
+
+    if (!driver) {
+      return res.status(400).json({ message: "DriverID not found" });
+    }
+
+    await DriverModel.findByIdAndDelete(castDriverId);
+
+    return res.status(200).json({ message: "Driver deleted successfully!" });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Error deleting driver!" });
+  }
+}
+export { registerAdmin, loginAdmin, getUserInfo, deleteDriver };

@@ -7,8 +7,14 @@ import { driverRouter } from "./routes/driverRoutes.js";
 dotenv.config();
 
 const app = express();
+const corsOptions = {
+  origin: [],
+  methods: "*",
+  credentials: true,
+};
+
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use("/admin", userRouter);
 app.use("/driver", driverRouter);

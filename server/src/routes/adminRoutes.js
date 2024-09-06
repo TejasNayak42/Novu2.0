@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  deleteDriver,
   getUserInfo,
   loginAdmin,
   registerAdmin,
@@ -14,3 +15,4 @@ router.post("/register", registerAdmin);
 router.post("/login", loginAdmin);
 router.get("/", verifyToken, getUserInfo);
 router.patch("/updatedriver", verifyToken, updateDriverRoute);
+router.delete("/deletedriver/:driverId", deleteDriver);
