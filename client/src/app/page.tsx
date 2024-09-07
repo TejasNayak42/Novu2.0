@@ -137,24 +137,26 @@ export default function Home() {
         <div className="rounded-md border mt-2">
           <Table {...getTableProps()}>
             <TableHeader>
-              {headerGroups.map((headerGroup) => (
-                <TableRow {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map((column) => (
-                    <TableHead
-                      className="text-base"
-                      {...column.getHeaderProps()}
-                    >
-                      {column.render("Header")}
-                    </TableHead>
-                  ))}
-                </TableRow>
+              {headerGroups.map((headerGroup, index) => (
+                <div key={index}>
+                  <TableRow {...headerGroup.getHeaderGroupProps()}>
+                    {headerGroup.headers.map((column) => (
+                      <TableHead
+                        className="text-base"
+                        {...column.getHeaderProps()}
+                      >
+                        {column.render("Header")}
+                      </TableHead>
+                    ))}
+                  </TableRow>
+                </div>
               ))}
             </TableHeader>
             <TableBody {...getTableBodyProps()}>
-              {rows.length ? (
-                rows.map((row) => {
-                  prepareRow(row);
-                  return (
+              {rows.map((row, index) => {
+                prepareRow(row);
+                return (
+                  <div key={index}>
                     <TableRow {...row.getRowProps()}>
                       {row.cells.map((cell) => (
                         <TableCell
@@ -165,18 +167,9 @@ export default function Home() {
                         </TableCell>
                       ))}
                     </TableRow>
-                  );
-                })
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    No results.
-                  </TableCell>
-                </TableRow>
-              )}
+                  </div>
+                );
+              })}
             </TableBody>
           </Table>
         </div>
