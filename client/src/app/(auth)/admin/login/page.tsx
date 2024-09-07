@@ -34,6 +34,8 @@ export default function AdminLogin() {
       );
 
       if (response.ok) {
+        setUsername("");
+        setPassword("");
         toast.success("Login successful");
         router.push("/admin/dashboard");
       } else {
