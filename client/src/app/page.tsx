@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useTable, Column } from "react-table";
 import React from "react";
 import {
   Table,
@@ -78,44 +77,17 @@ const data: Data[] = [
 ];
 
 export default function Home() {
-  const columns: Column<Data>[] = React.useMemo(
-    () => [
-      {
-        Header: "ID",
-        accessor: "id" as const,
-      },
-      {
-        Header: "Source",
-        accessor: "source" as const,
-      },
-      {
-        Header: "Destination",
-        accessor: "destination" as const,
-      },
-      {
-        Header: "Frequency",
-        accessor: "frequency" as const,
-      },
-    ],
-    []
-  );
-
-  const tableInstance = useTable({ columns, data });
-
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    tableInstance;
-
   return (
     <>
-      <main className="flex py-40 flex-col gap-5 max-w-xl mx-auto w-full px-5">
-        <h1 className="md:text-5xl text-4xl font-bold">NOVU</h1>
-        <div className="text-lg text-primary/70">A fleet management app.</div>
-        <div className="flex gap-4 items-center">
+      <main className="flex py-40 flex-col gap-3 max-w-xl mx-auto w-full px-5">
+        <h1 className="text-4xl font-bold">NOVU</h1>
+        <div className="text-primary/70">A fleet management app.</div>
+        <div className="flex gap-5 items-center">
           <Link href="/admin/login" className="w-full">
-            <Button className="h-10 w-full">Admin Login</Button>
+            <Button className="w-full">Admin Login</Button>
           </Link>
           <Link href="/driver/login" className="w-full">
-            <Button className="h-10 w-full" variant={"outline"}>
+            <Button className="w-full" variant={"outline"}>
               Driver Login
             </Button>
           </Link>
@@ -135,41 +107,24 @@ export default function Home() {
       <div className="max-w-4xl mx-auto px-5 pb-20">
         <h1 className="text-2xl font-semibold pb-2">Data</h1>
         <div className="rounded-md border mt-2">
-          <Table {...getTableProps()}>
+          <Table>
             <TableHeader>
-              {headerGroups.map((headerGroup, index) => (
-                <div key={index}>
-                  <TableRow {...headerGroup.getHeaderGroupProps()}>
-                    {headerGroup.headers.map((column) => (
-                      <TableHead
-                        className="text-base"
-                        {...column.getHeaderProps()}
-                      >
-                        {column.render("Header")}
-                      </TableHead>
-                    ))}
-                  </TableRow>
-                </div>
-              ))}
+              <TableRow>
+                <TableHead>ID</TableHead>
+                <TableHead>Source</TableHead>
+                <TableHead>Destination</TableHead>
+                <TableHead>Frequency</TableHead>
+              </TableRow>
             </TableHeader>
-            <TableBody {...getTableBodyProps()}>
-              {rows.map((row, index) => {
-                prepareRow(row);
-                return (
-                  <div key={index}>
-                    <TableRow {...row.getRowProps()}>
-                      {row.cells.map((cell) => (
-                        <TableCell
-                          className="text-base"
-                          {...cell.getCellProps()}
-                        >
-                          {cell.render("Cell")}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  </div>
-                );
-              })}
+            <TableBody>
+              {data.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell>{item.id}</TableCell>
+                  <TableCell>{item.source}</TableCell>
+                  <TableCell>{item.destination}</TableCell>
+                  <TableCell>{item.frequency}</TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </div>
