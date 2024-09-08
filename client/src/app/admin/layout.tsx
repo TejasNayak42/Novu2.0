@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -20,7 +19,6 @@ export default function AdminLayout({
 }) {
   const pathname = usePathname();
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
-  const router = useRouter();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
