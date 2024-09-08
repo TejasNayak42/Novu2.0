@@ -1,28 +1,94 @@
 "use client";
-import { useState } from "react";
-import { Textarea } from "@/components/ui/textarea";
+
+import * as React from "react";
+import { format } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
+import { jwtDecode } from "jwt-decode";
+
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
+interface JwtPayload {
+  id: string;
+}
+
+function DatePicker({
+  selectedDate,
+  onDateChange,
+}: {
+  selectedDate: Date | undefined;
+  onDateChange: (date: Date | undefined) => void;
+}) {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant={"outline"}
+          className={cn(
+            "justify-start text-left font-normal",
+            !selectedDate && "text-muted-foreground"
+          )}
+        >
+          <CalendarIcon className="mr-2 h-4 w-4" />
+          {selectedDate ? (
+            format(selectedDate, "PPP")
+          ) : (
+            <span>Pick a date</span>
+          )}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0">
+        <Calendar
+          mode="single"
+          selected={selectedDate}
+          onSelect={onDateChange}
+          initialFocus
+        />
+      </PopoverContent>
+    </Popover>
+  );
+}
+
 export default function AddDrivers() {
-  const [username, setUsername] = useState("");
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [birthdate, setBirthdate] = useState("");
-  const [blood, setBlood] = useState("");
-  const [license, setLicense] = useState("");
-  const [experience, setExperience] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const [bio, setBio] = useState("");
-  const [busID, setBusID] = useState("");
-  const [routeID, setRouteID] = useState("");
-  const [from, setFrom] = useState("");
-  const [to, setTo] = useState("");
-  const [time, setTime] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [username, setUsername] = React.useState("");
+  const [phone, setPhone] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [confirmPassword, setConfirmPassword] = React.useState("");
+  const [birthdate, setBirthdate] = React.useState<Date | undefined>();
+  const [blood, setBlood] = React.useState("");
+  const [license, setLicense] = React.useState("");
+  const [experience, setExperience] = React.useState("");
+  const [imageUrl, setImageUrl] = React.useState("");
+  const [bio, setBio] = React.useState("");
+  const [busID, setBusID] = React.useState("");
+  const [routeID, setRouteID] = React.useState("");
+  const [from, setFrom] = React.useState("");
+  const [to, setTo] = React.useState("");
+  const [time, setTime] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
+
+  const getUserOwnerID = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodedToken: JwtPayload = jwtDecode(token);
+        return decodedToken.id;
+      } catch (error) {
+        console.error("Failed to decode token:", error);
+      }
+    }
+    return null;
+  };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,17 +100,22 @@ export default function AddDrivers() {
       return;
     }
 
+    const formattedBirthdate = birthdate ? format(birthdate, "dd-MM-yyyy") : "";
+
+    const userOwnerID = getUserOwnerID();
+
     try {
       const response = await fetch("http://localhost:3001/admin/add-driver", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({
           username,
           phone,
           password,
-          birthdate,
+          birthdate: formattedBirthdate,
           blood,
           license,
           experience: parseInt(experience),
@@ -55,26 +126,37 @@ export default function AddDrivers() {
           from,
           to,
           time,
-          userOwner: "66422205aa8f86286959afca", // Example userOwner ID
+          userOwner: userOwnerID,
         }),
       });
 
       if (response.ok) {
-        // const data = await response.json();
-        // console.log(data);
-        // for development
-        toast.success("Registration successful");
+        toast.success("Driver added successfully");
+        setUsername("");
+        setPhone("");
+        setPassword("");
+        setConfirmPassword("");
+        setBirthdate(undefined);
+        setBlood("");
+        setLicense("");
+        setExperience("");
+        setImageUrl("");
+        setBio("");
+        setBusID("");
+        setRouteID("");
+        setFrom("");
+        setTo("");
+        setTime("");
       } else {
         const errorData = await response.json();
         toast.error(errorData.message || "Registration failed");
       }
     } catch (err) {
-      toast.error("Something went wrong. Please try again later.");
+      toast.error("Something went wrong. Please try again later");
     } finally {
       setLoading(false);
     }
   };
-
   return (
     <div className="w-full flex justify-center items-center">
       <form
@@ -96,7 +178,7 @@ export default function AddDrivers() {
             <Label htmlFor="phone">Phone</Label>
             <Input
               id="phone"
-              type="tel"
+              type="number"
               required
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
@@ -128,13 +210,7 @@ export default function AddDrivers() {
         <div className="grid md:grid-cols-2 gap-5">
           <div className="grid gap-2">
             <Label htmlFor="birthdate">Birthdate</Label>
-            <Input
-              id="birthdate"
-              type="text"
-              required
-              value={birthdate}
-              onChange={(e) => setBirthdate(e.target.value)}
-            />
+            <DatePicker selectedDate={birthdate} onDateChange={setBirthdate} />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="blood">Blood Group</Label>
@@ -231,7 +307,7 @@ export default function AddDrivers() {
           </div>
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="time">Departure Time</Label>
+          <Label htmlFor="time">Time</Label>
           <Input
             id="time"
             type="text"
@@ -240,36 +316,8 @@ export default function AddDrivers() {
             onChange={(e) => setTime(e.target.value)}
           />
         </div>
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <path
-                fill="currentColor"
-                d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8A8 8 0 0 1 12 20Z"
-                opacity="0.5"
-              />
-              <path
-                fill="currentColor"
-                d="M20 12h2A10 10 0 0 0 12 2V4A8 8 0 0 1 20 12Z"
-              >
-                <animateTransform
-                  attributeName="transform"
-                  dur="1s"
-                  from="0 12 12"
-                  repeatCount="indefinite"
-                  to="360 12 12"
-                  type="rotate"
-                />
-              </path>
-            </svg>
-          ) : (
-            "Add Driver"
-          )}
+        <Button type="submit" disabled={loading}>
+          {loading ? "Registering..." : "Register"}
         </Button>
       </form>
     </div>

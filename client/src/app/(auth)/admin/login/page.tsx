@@ -34,6 +34,8 @@ export default function AdminLogin() {
       );
 
       if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem("token", data.token);
         setUsername("");
         setPassword("");
         toast.success("Login successful");
