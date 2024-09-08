@@ -4,7 +4,7 @@ import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { AlignRight } from "lucide-react";
 import Logout from "@/components/logout";
 
