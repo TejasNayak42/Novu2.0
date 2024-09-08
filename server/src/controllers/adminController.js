@@ -57,7 +57,7 @@ async function loginAdmin(req, res) {
       .json({ message: "username or password is incorrect!" });
   }
 
-  const token = jwt.sign({ id: user._id }, "secret");
+  const token = jwt.sign({ id: user._id, role: "admin" }, "secret");
   res.json({ token, userID: user._id });
 }
 
