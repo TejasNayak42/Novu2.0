@@ -124,7 +124,7 @@ async function updateDriverRoute(req, res) {
     res.status(200).json({ message: "Driver route updated successfully !" });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ message: "Error updatingg driver route !" });
+    return res.status(500).json({ message: "Error updating driver route !" });
   }
 }
 
