@@ -62,7 +62,6 @@ async function loginAdmin(req, res) {
 }
 
 async function getUserInfo(req, res) {
-  // Check if user is authorized (logged in)
   if (!req.user) {
     return res.status(401).json({ message: "Unauthorized access!" });
   }
@@ -96,4 +95,25 @@ async function deleteDriver(req, res) {
     return res.status(500).json({ message: "Error deleting driver!" });
   }
 }
-export { registerAdmin, loginAdmin, getUserInfo, deleteDriver };
+
+async function getDriversUnderAdmin(req, res) {
+  const adminId = req.user.id;
+  try {
+    const drivers = await DriverModel.find({ userOwner: adminId });
+    if (!drivers || drivers.length === 0)
+      return res
+        .status(404)
+        .json({ message: "No drivers found for this admin" });
+    return res.status(200).json(drivers);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Error retrieving drivers" });
+  }
+}
+export {
+  registerAdmin,
+  loginAdmin,
+  getUserInfo,
+  deleteDriver,
+  getDriversUnderAdmin,
+};

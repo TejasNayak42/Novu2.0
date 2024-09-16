@@ -1,6 +1,7 @@
 import express from "express";
 import {
   deleteDriver,
+  getDriversUnderAdmin,
   getUserInfo,
   loginAdmin,
   registerAdmin,
@@ -16,7 +17,11 @@ export { router as userRouter };
 
 router.post("/register", registerAdmin);
 router.post("/login", loginAdmin);
-router.get("/", verifyToken, getUserInfo);
-router.patch("/update-driver", verifyToken, updateDriverRoute);
-router.delete("/delete-driver/:driverId", verifyToken, deleteDriver);
 router.post("/add-driver", verifyToken, registerDriver);
+
+router.get("/", verifyToken, getUserInfo);
+router.get("/drivers", verifyToken, getDriversUnderAdmin);
+
+router.patch("/update-driver", verifyToken, updateDriverRoute);
+
+router.delete("/delete-driver/:driverId", verifyToken, deleteDriver);
