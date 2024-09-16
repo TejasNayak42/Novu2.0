@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import BackButton from "@/components/back-button";
 
 export default function DriverLogin() {
   const [phone, setPhone] = useState("");
@@ -48,6 +49,7 @@ export default function DriverLogin() {
 
   return (
     <div className="w-full lg:grid flex justify-center items-center lg:grid-cols-2 min-h-[100dvh]">
+      <BackButton />
       <div className="flex justify-center items-center">
         <form onSubmit={handleLogin} className="mx-auto grid w-[350px] gap-6">
           <div className="grid gap-2 text-center">
@@ -114,7 +116,8 @@ export default function DriverLogin() {
           alt="image"
           width="500"
           height="500"
-          className="w-full object-cover brightness-[0.2] grayscale h-[100dvh]"
+          quality={"100"}
+          className="w-full object-cover h-[100dvh]"
         />
       </div>
     </div>
