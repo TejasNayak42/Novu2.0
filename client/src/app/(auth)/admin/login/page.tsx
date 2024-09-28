@@ -64,6 +64,7 @@ export default function AdminLogin() {
             <div className="grid gap-2">
               <Label htmlFor="username">Username</Label>
               <Input
+                disabled={loading}
                 id="username"
                 type="text"
                 required
@@ -74,6 +75,7 @@ export default function AdminLogin() {
             <div className="grid gap-2">
               <Label htmlFor="password">Password</Label>
               <Input
+                disabled={loading}
                 id="password"
                 type="password"
                 required

@@ -71,6 +71,7 @@ export default function AdminRegister() {
             <div className="grid gap-2">
               <Label htmlFor="username">Username</Label>
               <Input
+                disabled={loading}
                 id="username"
                 type="text"
                 required
@@ -81,6 +82,7 @@ export default function AdminRegister() {
             <div className="grid gap-2">
               <Label htmlFor="phone">Phone</Label>
               <Input
+                disabled={loading}
                 id="phone"
                 type="number"
                 required
@@ -91,6 +93,7 @@ export default function AdminRegister() {
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
+                disabled={loading}
                 id="email"
                 type="email"
                 required
@@ -101,6 +104,7 @@ export default function AdminRegister() {
             <div className="grid gap-2">
               <Label htmlFor="password">Password</Label>
               <Input
+                disabled={loading}
                 id="password"
                 type="password"
                 required
@@ -111,6 +115,7 @@ export default function AdminRegister() {
             <div className="grid gap-2">
               <Label htmlFor="confirmPassword">Confirm Password</Label>
               <Input
+                disabled={loading}
                 id="confirmPassword"
                 type="password"
                 required

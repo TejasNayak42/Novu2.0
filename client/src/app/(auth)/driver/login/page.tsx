@@ -34,15 +34,19 @@ export default function DriverLogin() {
       );
 
       if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem("token", data.token);
+        setPhone("");
+        setPassword("");
         toast.success("Login successful");
         router.push("/driver/dashboard");
       } else {
         const errorData = await response.json();
         toast.error(errorData.message || "Login failed");
+        setLoading(false);
       }
     } catch (err) {
       toast.error("Something went wrong. Please try again later.");
-    } finally {
       setLoading(false);
     }
   };
@@ -59,6 +63,7 @@ export default function DriverLogin() {
             <div className="grid gap-2">
               <Label htmlFor="phone">Phone</Label>
               <Input
+                disabled={loading}
                 id="phone"
                 type="text"
                 required
@@ -69,6 +74,7 @@ export default function DriverLogin() {
             <div className="grid gap-2">
               <Label htmlFor="password">Password</Label>
               <Input
+                disabled={loading}
                 id="password"
                 type="password"
                 required

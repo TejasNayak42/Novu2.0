@@ -93,9 +93,18 @@ async function loginDriver(req, res) {
         .json({ message: "Incorrect phone number or password !" });
     }
 
-    const token = jwt.sign({ id: driver._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      {
+        id: driver._id,
+        role: "driver",
+        name: driver.username,
+        img: driver.imageUrl,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
     res.json({ token, driverID: driver._id });
   } catch (err) {
     console.error(err);
