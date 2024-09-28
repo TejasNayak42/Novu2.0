@@ -44,10 +44,10 @@ export default function AdminLogin() {
       } else {
         const errorData = await response.json();
         toast.error(errorData.message || "Login failed");
+        setLoading(false);
       }
     } catch (err) {
       toast.error("Something went wrong. Please try again later.");
-    } finally {
       setLoading(false);
     }
   };

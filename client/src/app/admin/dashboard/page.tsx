@@ -7,12 +7,12 @@ const Dashboard = () => {
   return (
     <div>
       <div className="flex flex-col gap-5 pb-10">
-        <TotalDrivers />
         <div className="grid md:grid-cols-5 gap-5">
           <div className="grid md:col-span-2">
             <FuelCosts />
           </div>
-          <div className="grid md:col-span-3">
+          <div className="flex flex-col md:col-span-3 gap-5">
+            <TotalDrivers />
             <ActiveDrivers />
           </div>
         </div>

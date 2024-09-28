@@ -7,9 +7,11 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { usePathname } from "next/navigation";
 import { AlignRight } from "lucide-react";
 import Logout from "@/components/logout";
+import { Button } from "@/components/ui/button";
 
 interface DecodedToken {
   role: string;
+  name: string;
 }
 
 export default function AdminLayout({
@@ -19,7 +21,7 @@ export default function AdminLayout({
 }) {
   const pathname = usePathname();
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
-
+  const [name, setName] = useState("");
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -27,6 +29,7 @@ export default function AdminLayout({
       try {
         const decodedToken: DecodedToken = jwtDecode(token);
         setIsAdmin(decodedToken.role === "admin");
+        setName(decodedToken.name);
       } catch (error) {
         console.error("Invalid token", error);
         setIsAdmin(false);
@@ -181,13 +184,11 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="md:px-10 px-5 min-h-screen">
+    <div className="md:px-10 px-5 min-h-screen pb-20">
       <div className="flex justify-between py-8 items-center">
         <div className="flex justify-center items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-gradient-to-tl from-[#00fd00] to-background" />
-          <h1 className="font-semibold text-lg tracking-wide">
-            Hello, Srajan Kumar
-          </h1>
+          <h1 className="font-semibold text-lg tracking-wide">Hello, {name}</h1>
         </div>
         <div className="md:flex gap-3 hidden">
           <Logout />
@@ -201,10 +202,53 @@ export default function AdminLayout({
                 <AlignRight className="w-5 h-5" />
               </div>
             </SheetTrigger>
-            <SheetContent>
-              <div className="flex flex-col justify-between h-full">
-                <Logout />
+            <SheetContent className="flex flex-col justify-between">
+              <div className="flex flex-col gap-5">
+                <h1 className="text-2xl font-bold">NOVU</h1>
+                <Link href="/admin/dashboard">
+                  <Button
+                    variant={`${
+                      pathname === "/admin/dashboard" ? "default" : "secondary"
+                    }`}
+                    className="w-full"
+                  >
+                    Dashboard
+                  </Button>
+                </Link>
+                <Link href="/admin/add-drivers">
+                  <Button
+                    variant={`${
+                      pathname === "/admin/add-drivers"
+                        ? "default"
+                        : "secondary"
+                    }`}
+                    className="w-full"
+                  >
+                    Add Drivers
+                  </Button>
+                </Link>
+                <Link href="/admin/drivers">
+                  <Button
+                    variant={`${
+                      pathname === "/admin/drivers" ? "default" : "secondary"
+                    }`}
+                    className="w-full"
+                  >
+                    Drivers
+                  </Button>
+                </Link>
+                <Link href="/admin/vehicles">
+                  <Button
+                    variant={`${
+                      pathname === "/admin/vehicles" ? "default" : "secondary"
+                    }`}
+                    className="w-full"
+                  >
+                    Vehicles
+                  </Button>
+                </Link>
               </div>
+              <Logout />
             </SheetContent>
           </Sheet>
         </div>
@@ -233,14 +277,6 @@ export default function AdminLayout({
           href="/admin/drivers"
         >
           Drivers
-        </Link>
-        <Link
-          className={`${
-            pathname === "/admin/add-vehicles" ? "bg-background" : ""
-          } px-3 py-2 rounded-sm`}
-          href="/admin/add-vehicles"
-        >
-          Add Vehicles
         </Link>
         <Link
           className={`${

@@ -65,10 +65,10 @@ async function registerDriver(req, res) {
       time,
     });
     await newDriver.save();
-    res.status(201).json({ message: "Driver Registered successfully" });
+    res.status(201).json({ message: "Driver registered successfully" });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ message: "Error resgistering driver" });
+    return res.status(500).json({ message: "Error registering driver" });
   }
 }
 
@@ -99,7 +99,7 @@ async function loginDriver(req, res) {
     res.json({ token, driverID: driver._id });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ message: "Error logging in Driver" });
+    return res.status(500).json({ message: "Error logging in driver" });
   }
 }
 
