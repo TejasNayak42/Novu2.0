@@ -65,10 +65,10 @@ async function registerDriver(req, res) {
       time,
     });
     await newDriver.save();
-    res.status(201).json({ message: "Driver Registered successfully" });
+    res.status(201).json({ message: "Driver registered successfully" });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ message: "Error resgistering driver" });
+    return res.status(500).json({ message: "Error registering driver" });
   }
 }
 
@@ -93,13 +93,22 @@ async function loginDriver(req, res) {
         .json({ message: "Incorrect phone number or password !" });
     }
 
-    const token = jwt.sign({ id: driver._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      {
+        id: driver._id,
+        role: "driver",
+        name: driver.username,
+        img: driver.imageUrl,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
     res.json({ token, driverID: driver._id });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ message: "Error logging in Driver" });
+    return res.status(500).json({ message: "Error logging in driver" });
   }
 }
 

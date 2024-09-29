@@ -16,11 +16,68 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "sonner";
 
 interface JwtPayload {
   id: string;
 }
+
+const data = [
+  {
+    id: "1",
+    source: "State Bank",
+    destination: "Kunjathbail",
+  },
+  {
+    id: "7",
+    source: "State Bank",
+    destination: "Urwa Store",
+  },
+  {
+    id: "13",
+    source: "State Bank",
+    destination: "Kottara",
+  },
+  {
+    id: "1B",
+    source: "State Bank",
+    destination: "Kodical",
+  },
+  {
+    id: "31",
+    source: "State Bank",
+    destination: "Mannagudda Shediguri",
+  },
+  {
+    id: "31A",
+    source: "State Bank",
+    destination: "Lalbag Shediguri",
+  },
+  {
+    id: "31B",
+    source: "State Bank",
+    destination: "Dambel",
+  },
+  {
+    id: "16",
+    source: "State Bank",
+    destination: "Sulthan Bathery",
+  },
+  {
+    id: "16A",
+    source: "State Bank",
+    destination: "Sulthan Bathery",
+  },
+];
 
 function DatePicker({
   selectedDate,
@@ -88,6 +145,15 @@ export default function AddDrivers() {
       }
     }
     return null;
+  };
+
+  const handleRouteChange = (value: string) => {
+    const selectedRoute = data.find((route) => route.id === value);
+    if (selectedRoute) {
+      setRouteID(selectedRoute.id);
+      setFrom(selectedRoute.source);
+      setTo(selectedRoute.destination);
+    }
   };
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -167,6 +233,7 @@ export default function AddDrivers() {
           <div className="grid gap-2">
             <Label htmlFor="username">Username</Label>
             <Input
+              disabled={loading}
               id="username"
               type="text"
               required
@@ -177,6 +244,7 @@ export default function AddDrivers() {
           <div className="grid gap-2">
             <Label htmlFor="phone">Phone</Label>
             <Input
+              disabled={loading}
               id="phone"
               type="number"
               required
@@ -189,6 +257,7 @@ export default function AddDrivers() {
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
             <Input
+              disabled={loading}
               id="password"
               type="password"
               required
@@ -199,6 +268,7 @@ export default function AddDrivers() {
           <div className="grid gap-2">
             <Label htmlFor="confirmPassword">Confirm Password</Label>
             <Input
+              disabled={loading}
               id="confirmPassword"
               type="password"
               required
@@ -215,6 +285,7 @@ export default function AddDrivers() {
           <div className="grid gap-2">
             <Label htmlFor="blood">Blood Group</Label>
             <Input
+              disabled={loading}
               id="blood"
               type="text"
               required
@@ -226,6 +297,7 @@ export default function AddDrivers() {
         <div className="grid gap-2">
           <Label htmlFor="license">License Number</Label>
           <Input
+            disabled={loading}
             id="license"
             type="text"
             required
@@ -236,6 +308,7 @@ export default function AddDrivers() {
         <div className="grid gap-2">
           <Label htmlFor="experience">Experience (years)</Label>
           <Input
+            disabled={loading}
             id="experience"
             type="number"
             required
@@ -246,6 +319,7 @@ export default function AddDrivers() {
         <div className="grid gap-2">
           <Label htmlFor="imageUrl">Profile Image URL</Label>
           <Input
+            disabled={loading}
             id="imageUrl"
             type="url"
             required
@@ -256,6 +330,7 @@ export default function AddDrivers() {
         <div className="grid gap-2">
           <Label htmlFor="bio">Bio</Label>
           <Textarea
+            disabled={loading}
             id="bio"
             required
             value={bio}
@@ -266,6 +341,7 @@ export default function AddDrivers() {
           <div className="grid gap-2">
             <Label htmlFor="busID">Bus ID</Label>
             <Input
+              disabled={loading}
               id="busID"
               type="text"
               required
@@ -275,19 +351,28 @@ export default function AddDrivers() {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="routeID">Route ID</Label>
-            <Input
-              id="routeID"
-              type="text"
-              required
-              value={routeID}
-              onChange={(e) => setRouteID(e.target.value)}
-            />
+            <Select disabled={loading} onValueChange={handleRouteChange}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select Route" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Routes</SelectLabel>
+                  {data.map((route) => (
+                    <SelectItem key={route.id} value={route.id}>
+                      {route.id}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
         </div>
         <div className="grid md:grid-cols-2 gap-5">
           <div className="grid gap-2">
             <Label htmlFor="from">From</Label>
             <Input
+              disabled
               id="from"
               type="text"
               required
@@ -298,6 +383,7 @@ export default function AddDrivers() {
           <div className="grid gap-2">
             <Label htmlFor="to">To</Label>
             <Input
+              disabled
               id="to"
               type="text"
               required
@@ -306,9 +392,11 @@ export default function AddDrivers() {
             />
           </div>
         </div>
+
         <div className="grid gap-2">
           <Label htmlFor="time">Time</Label>
           <Input
+            disabled={loading}
             id="time"
             type="text"
             required

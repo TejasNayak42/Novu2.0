@@ -22,7 +22,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [isDriver, setIsDriver] = useState<boolean>(false);
   const [name, setName] = useState("");
   const [img, setImg] = useState("");
   useEffect(() => {
@@ -31,19 +31,19 @@ export default function AdminLayout({
     if (token) {
       try {
         const decodedToken: DecodedToken = jwtDecode(token);
-        setIsAdmin(decodedToken.role === "admin");
+        setIsDriver(decodedToken.role === "driver");
         setName(decodedToken.name);
         setImg(decodedToken.img);
       } catch (error) {
         console.error("Invalid token", error);
-        setIsAdmin(false);
+        setIsDriver(false);
       }
     } else {
-      setIsAdmin(false);
+      setIsDriver(false);
     }
   }, []);
 
-  if (!isAdmin) {
+  if (!isDriver) {
     return (
       <div className="min-h-[100dvh] flex justify-center items-center">
         <svg
@@ -191,7 +191,10 @@ export default function AdminLayout({
     <div className="md:px-10 px-5 min-h-screen pb-20">
       <div className="flex justify-between py-8 items-center">
         <div className="flex justify-center items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-tl from-[#00fd00] to-background" />
+          <Avatar>
+            <AvatarImage src={img} />
+            <AvatarFallback>{name}</AvatarFallback>
+          </Avatar>
           <h1 className="font-semibold text-lg tracking-wide">Hello, {name}</h1>
         </div>
         <div className="md:flex gap-3 hidden">
@@ -209,46 +212,34 @@ export default function AdminLayout({
             <SheetContent className="flex flex-col justify-between">
               <div className="flex flex-col gap-5">
                 <h1 className="text-2xl font-bold">NOVU</h1>
-                <Link href="/admin/dashboard">
+                <Link href="/driver/dashboard">
                   <Button
                     variant={`${
-                      pathname === "/admin/dashboard" ? "default" : "secondary"
+                      pathname === "/driver/dashboard" ? "default" : "secondary"
                     }`}
                     className="w-full"
                   >
                     Dashboard
                   </Button>
                 </Link>
-                <Link href="/admin/add-drivers">
+                <Link href="/driver/route">
                   <Button
                     variant={`${
-                      pathname === "/admin/add-drivers"
-                        ? "default"
-                        : "secondary"
+                      pathname === "/driver/route" ? "default" : "secondary"
                     }`}
                     className="w-full"
                   >
-                    Add Drivers
+                    Route
                   </Button>
                 </Link>
-                <Link href="/admin/drivers">
+                <Link href="/driver/parking">
                   <Button
                     variant={`${
-                      pathname === "/admin/drivers" ? "default" : "secondary"
+                      pathname === "/driver/parking" ? "default" : "secondary"
                     }`}
                     className="w-full"
                   >
-                    Drivers
-                  </Button>
-                </Link>
-                <Link href="/admin/vehicles">
-                  <Button
-                    variant={`${
-                      pathname === "/admin/vehicles" ? "default" : "secondary"
-                    }`}
-                    className="w-full"
-                  >
-                    Vehicles
+                    Parking
                   </Button>
                 </Link>
               </div>
@@ -260,35 +251,27 @@ export default function AdminLayout({
       <div className="md:flex hidden gap-3 mb-6 bg-secondary w-fit p-2 rounded-md">
         <Link
           className={`${
-            pathname === "/admin/dashboard" ? "bg-background" : ""
+            pathname === "/driver/dashboard" ? "bg-background" : ""
           } px-3 py-2 rounded-sm`}
-          href="/admin/dashboard"
+          href="/driver/dashboard"
         >
           Dashboard
         </Link>
         <Link
           className={`${
-            pathname === "/admin/add-drivers" ? "bg-background" : ""
+            pathname === "/driver/route" ? "bg-background" : ""
           } px-3 py-2 rounded-sm`}
-          href="/admin/add-drivers"
+          href="/driver/route"
         >
-          Add Drivers
+          Route
         </Link>
         <Link
           className={`${
-            pathname === "/admin/drivers" ? "bg-background" : ""
+            pathname === "/driver/parking" ? "bg-background" : ""
           } px-3 py-2 rounded-sm`}
-          href="/admin/drivers"
+          href="/driver/parking"
         >
-          Drivers
-        </Link>
-        <Link
-          className={`${
-            pathname === "/admin/vehicles" ? "bg-background" : ""
-          } px-3 py-2 rounded-sm`}
-          href="/admin/vehicles"
-        >
-          Vehicles
+          Parking
         </Link>
       </div>
       {children}

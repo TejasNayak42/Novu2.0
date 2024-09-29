@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import BackButton from "@/components/back-button";
 
 export default function AdminRegister() {
   const [username, setUsername] = useState("");
@@ -57,6 +58,7 @@ export default function AdminRegister() {
 
   return (
     <div className="w-full lg:grid flex justify-center items-center lg:grid-cols-2 min-h-[100dvh]">
+      <BackButton />
       <div className="flex justify-center items-center">
         <form
           onSubmit={handleRegister}
@@ -69,6 +71,7 @@ export default function AdminRegister() {
             <div className="grid gap-2">
               <Label htmlFor="username">Username</Label>
               <Input
+                disabled={loading}
                 id="username"
                 type="text"
                 required
@@ -79,8 +82,9 @@ export default function AdminRegister() {
             <div className="grid gap-2">
               <Label htmlFor="phone">Phone</Label>
               <Input
+                disabled={loading}
                 id="phone"
-                type="tel"
+                type="number"
                 required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
@@ -89,6 +93,7 @@ export default function AdminRegister() {
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
+                disabled={loading}
                 id="email"
                 type="email"
                 required
@@ -99,6 +104,7 @@ export default function AdminRegister() {
             <div className="grid gap-2">
               <Label htmlFor="password">Password</Label>
               <Input
+                disabled={loading}
                 id="password"
                 type="password"
                 required
@@ -109,6 +115,7 @@ export default function AdminRegister() {
             <div className="grid gap-2">
               <Label htmlFor="confirmPassword">Confirm Password</Label>
               <Input
+                disabled={loading}
                 id="confirmPassword"
                 type="password"
                 required
@@ -165,7 +172,8 @@ export default function AdminRegister() {
           alt="image"
           width="500"
           height="500"
-          className="w-full object-cover brightness-[0.2] grayscale h-[100dvh]"
+          quality={"100"}
+          className="w-full object-cover h-[100dvh]"
         />
       </div>
     </div>
