@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { DriverModel } from "../models/Driver.js";
+import { VehicleModel } from "../models/Vehicle.js";
 
 async function registerDriver(req, res) {
   const {
@@ -14,7 +15,7 @@ async function registerDriver(req, res) {
     imageUrl,
     bio,
     userOwner,
-    busID,
+    vehicleID,
     routeID,
     from,
     to,
@@ -26,7 +27,7 @@ async function registerDriver(req, res) {
     !phone ||
     !password ||
     !imageUrl ||
-    !busID ||
+    !vehicleID ||
     !routeID ||
     !from ||
     !to ||
@@ -38,6 +39,15 @@ async function registerDriver(req, res) {
   }
 
   try {
+    // Check if the vehicleID matches an existing vehicleId
+    const vehicle = await VehicleModel.findOne({ vehicleId: vehicleID });
+    if (!vehicle) {
+      return res
+        .status(400)
+        .json({ message: "Invalid vehicleID. No matching vehicle found!" });
+    }
+
+    // Check if a driver with the same phone number already exists
     const existingDriver = await DriverModel.findOne({ phone });
     if (existingDriver) {
       return res
@@ -58,12 +68,13 @@ async function registerDriver(req, res) {
       imageUrl,
       bio,
       userOwner,
-      busID,
+      vehicleID,
       routeID,
       from,
       to,
       time,
     });
+
     await newDriver.save();
     res.status(201).json({ message: "Driver registered successfully" });
   } catch (err) {
@@ -113,16 +124,16 @@ async function loginDriver(req, res) {
 }
 
 async function updateDriverRoute(req, res) {
-  const { driverID, from, to, routeID, busID } = req.body;
+  const { driverID, from, to, routeID, vehicleID } = req.body;
 
-  if (!driverID || !from || !to || !routeID || !busID) {
+  if (!driverID || !from || !to || !routeID || !vehicleID) {
     return res.status(400).json({ message: "Please provide all requirements" });
   }
 
   try {
     const updatedDriver = await DriverModel.findByIdAndUpdate(
       driverID,
-      { from, to, routeID, busID },
+      { from, to, routeID, vehcileID },
       { new: true, runValidators: true }
     );
 
@@ -156,7 +167,7 @@ async function getDriverData(req, res) {
       experience: driver.experience,
       imageUrl: driver.imageUrl,
       bio: driver.bio,
-      busID: driver.busID,
+      vehicleID: driver.vehicleID,
       routeID: driver.routeID,
       from: driver.from,
       to: driver.to,

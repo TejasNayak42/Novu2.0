@@ -52,7 +52,20 @@ const DriverSchema = new mongoose.Schema({
     required: [true, "Please add a password"],
     minLength: [6, "Password must be atleast 6 characters"],
   },
-  busID: { type: String, required: true },
+  vehicleID: {
+    type: String,
+    required: true,
+    validate: {
+      validator: async function (value) {
+        const vehicle = await mongoose.models.Vehicle.findOne({
+          vehicleId: value,
+        });
+        return !!vehicle;
+      },
+      message: (props) =>
+        `No matching vehicleId for vehicleID: ${props.value} in Vehicle data!`,
+    },
+  },
   routeID: { type: String, required: true },
   from: { type: String, required: true },
   to: { type: String, required: true },

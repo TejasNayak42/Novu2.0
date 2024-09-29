@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  addVehicle,
   deleteDriver,
   getDriversUnderAdmin,
   getUserInfo,
@@ -18,6 +19,7 @@ export { router as userRouter };
 router.post("/register", registerAdmin);
 router.post("/login", loginAdmin);
 router.post("/add-driver", verifyToken, registerDriver);
+router.post("/add-vehicle", verifyToken, addVehicle);
 
 router.get("/", verifyToken, getUserInfo);
 router.get("/drivers", verifyToken, getDriversUnderAdmin);

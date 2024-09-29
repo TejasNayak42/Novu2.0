@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { AdminModel } from "../models/Admin.js";
 import { DriverModel } from "../models/Driver.js";
 import mongoose from "mongoose";
+import { VehicleModel } from "../models/Vehicle.js";
 
 async function registerAdmin(req, res) {
   const { username, phone, email, password } = req.body;
@@ -113,10 +114,51 @@ async function getDriversUnderAdmin(req, res) {
     return res.status(500).json({ message: "Error retrieving drivers" });
   }
 }
+
+async function addVehicle(req, res) {
+  const { vehicleId, longitude, latitude, plateNumber, color, year, model } =
+    req.body;
+
+  if (
+    !vehicleId ||
+    !longitude ||
+    !latitude ||
+    !plateNumber ||
+    !color ||
+    !year ||
+    !model
+  ) {
+    return res
+      .status(400)
+      .json({ message: "Please provide all required vehicle details!" });
+  }
+
+  try {
+    const newVehicle = new VehicleModel({
+      vehicleId,
+      longitude,
+      latitude,
+      plateNumber,
+      color,
+      year,
+      model,
+    });
+
+    await newVehicle.save();
+    res.status(201).json({ message: "Vehicle created successfully!" });
+  } catch (error) {
+    console.error("Error creating vehicle:", error); // Log the error
+    res
+      .status(500)
+      .json({ message: "Error creating vehicle", error: error.message });
+  }
+}
+
 export {
   registerAdmin,
   loginAdmin,
   getUserInfo,
   deleteDriver,
   getDriversUnderAdmin,
+  addVehicle,
 };
