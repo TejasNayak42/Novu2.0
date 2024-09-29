@@ -31,6 +31,12 @@ interface JwtPayload {
   id: string;
 }
 
+interface Vehicle {
+  _id: string;
+  vehicleId: string;
+  plateNumber: string;
+}
+
 const data = [
   {
     id: "1",
@@ -133,6 +139,35 @@ export default function AddDrivers() {
   const [to, setTo] = React.useState("");
   const [time, setTime] = React.useState("");
   const [loading, setLoading] = React.useState(false);
+  const [vehicleList, setVehicleList] = React.useState<Vehicle[]>([]);
+  const [selectedVehicle, setSelectedVehicle] = React.useState<
+    string | undefined
+  >(undefined);
+
+  React.useEffect(() => {
+    const fetchVehicles = async () => {
+      try {
+        const response = await fetch("http://localhost:3001/admin/vehicles", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        if (response.ok) {
+          const vehicles = await response.json();
+          console.log("Fetched vehicles:", vehicles);
+          setVehicleList(vehicles);
+        } else {
+          toast.error("Failed to fetch vehicles");
+        }
+      } catch (error) {
+        toast.error("Something went wrong while fetching vehicles");
+      }
+    };
+
+    fetchVehicles();
+  }, []);
 
   const getUserOwnerID = () => {
     const token = localStorage.getItem("token");
@@ -193,11 +228,13 @@ export default function AddDrivers() {
           to,
           time,
           userOwner: userOwnerID,
+          vehicleID: selectedVehicle,
         }),
       });
 
       if (response.ok) {
         toast.success("Driver added successfully");
+        // Reset form fields
         setUsername("");
         setPhone("");
         setPassword("");
@@ -213,6 +250,7 @@ export default function AddDrivers() {
         setFrom("");
         setTo("");
         setTime("");
+        setSelectedVehicle("");
       } else {
         const errorData = await response.json();
         toast.error(errorData.message || "Registration failed");
@@ -223,6 +261,7 @@ export default function AddDrivers() {
       setLoading(false);
     }
   };
+
   return (
     <div className="w-full flex justify-center items-center">
       <form
@@ -338,7 +377,7 @@ export default function AddDrivers() {
           />
         </div>
         <div className="grid md:grid-cols-2 gap-5">
-          <div className="grid gap-2">
+          {/* <div className="grid gap-2">
             <Label htmlFor="busID">Bus ID</Label>
             <Input
               disabled={loading}
@@ -348,6 +387,24 @@ export default function AddDrivers() {
               value={busID}
               onChange={(e) => setBusID(e.target.value)}
             />
+          </div> */}
+          <div className="grid gap-2">
+            <Label htmlFor="vehicle">Vehicle</Label>
+            <Select disabled={loading} onValueChange={setSelectedVehicle}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select Vehicle" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Vehicles</SelectLabel>
+                  {vehicleList.map((vehicle) => (
+                    <SelectItem key={vehicle._id} value={vehicle.vehicleId}>
+                      {vehicle.plateNumber} ({vehicle.vehicleId})
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
           <div className="grid gap-2">
             <Label htmlFor="routeID">Route ID</Label>
@@ -392,7 +449,6 @@ export default function AddDrivers() {
             />
           </div>
         </div>
-
         <div className="grid gap-2">
           <Label htmlFor="time">Time</Label>
           <Input

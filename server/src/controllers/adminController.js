@@ -154,6 +154,61 @@ async function addVehicle(req, res) {
   }
 }
 
+async function getAllVehicles(req, res) {
+  try {
+    const vehicles = await VehicleModel.find();
+
+    if (!vehicles || vehicles.length === 0) {
+      return res.status(404).json({ message: "No vehicles found" });
+    }
+
+    res.status(200).json(vehicles);
+  } catch (error) {
+    console.error("Error fetching vehicles:", error);
+    res
+      .status(500)
+      .json({ message: "Error fetching vehicles", error: error.message });
+  }
+}
+
+async function updateVehicle(req, res) {
+  const { vehicleId, plateNumber, longitude, latitude, color, year, model } =
+    req.body;
+
+  if (
+    !vehicleId ||
+    !plateNumber ||
+    !longitude ||
+    !latitude ||
+    !color ||
+    !year ||
+    !model
+  ) {
+    return res
+      .status(400)
+      .json({ message: "Please provide all required vehicle details" });
+  }
+
+  try {
+    const updatedVehicle = await VehicleModel.findOneAndUpdate(
+      { vehicleId },
+      { plateNumber, longitude, latitude, color, year, model },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedVehicle) {
+      return res.status(404).json({ message: "Vehicle not found!" });
+    }
+
+    res.status(200).json({
+      message: "Vehicle updated successfully!",
+      vehicle: updatedVehicle,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Error updating vehicle!" });
+  }
+}
 export {
   registerAdmin,
   loginAdmin,
@@ -161,4 +216,6 @@ export {
   deleteDriver,
   getDriversUnderAdmin,
   addVehicle,
+  getAllVehicles,
+  updateVehicle,
 };

@@ -6,6 +6,8 @@ import {
   getUserInfo,
   loginAdmin,
   registerAdmin,
+  getAllVehicles,
+  updateVehicle,
 } from "../controllers/adminController.js";
 import { verifyToken } from "../middlwares/jwtMiddleware.js";
 import {
@@ -23,6 +25,9 @@ router.post("/add-vehicle", verifyToken, addVehicle);
 
 router.get("/", verifyToken, getUserInfo);
 router.get("/drivers", verifyToken, getDriversUnderAdmin);
+router.get("/vehicles", verifyToken, getAllVehicles);
+
+router.patch("/update-vehicle", verifyToken, updateVehicle);
 
 router.patch("/update-driver", verifyToken, updateDriverRoute);
 

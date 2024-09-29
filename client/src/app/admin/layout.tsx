@@ -241,6 +241,18 @@ export default function AdminLayout({
                     Drivers
                   </Button>
                 </Link>
+                <Link href="/admin/add-vehicles">
+                  <Button
+                    variant={`${
+                      pathname === "/admin/add-vehicles"
+                        ? "default"
+                        : "secondary"
+                    }`}
+                    className="w-full"
+                  >
+                    Add Vehicles
+                  </Button>
+                </Link>
                 <Link href="/admin/vehicles">
                   <Button
                     variant={`${
@@ -249,6 +261,16 @@ export default function AdminLayout({
                     className="w-full"
                   >
                     Vehicles
+                  </Button>
+                </Link>
+                <Link href="/admin/routes">
+                  <Button
+                    variant={`${
+                      pathname === "/admin/routes" ? "default" : "secondary"
+                    }`}
+                    className="w-full"
+                  >
+                    Routes
                   </Button>
                 </Link>
               </div>
@@ -284,11 +306,27 @@ export default function AdminLayout({
         </Link>
         <Link
           className={`${
+            pathname === "/admin/add-vehicles" ? "bg-background" : ""
+          } px-3 py-2 rounded-sm`}
+          href="/admin/add-vehicles"
+        >
+          Add Vehicles
+        </Link>
+        <Link
+          className={`${
             pathname === "/admin/vehicles" ? "bg-background" : ""
           } px-3 py-2 rounded-sm`}
           href="/admin/vehicles"
         >
           Vehicles
+        </Link>
+        <Link
+          className={`${
+            pathname === "/admin/routes" ? "bg-background" : ""
+          } px-3 py-2 rounded-sm`}
+          href="/admin/routes"
+        >
+          Routes
         </Link>
       </div>
       {children}

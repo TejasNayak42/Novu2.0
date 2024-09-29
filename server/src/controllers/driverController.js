@@ -133,7 +133,7 @@ async function updateDriverRoute(req, res) {
   try {
     const updatedDriver = await DriverModel.findByIdAndUpdate(
       driverID,
-      { from, to, routeID, vehcileID },
+      { from, to, routeID, vehicleID },
       { new: true, runValidators: true }
     );
 
