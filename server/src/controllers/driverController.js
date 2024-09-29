@@ -128,4 +128,35 @@ async function updateDriverRoute(req, res) {
   }
 }
 
-export { registerDriver, loginDriver, updateDriverRoute };
+async function getDriverData(req, res) {
+  try {
+    const driverID = req.params.driverId;
+
+    const driver = await DriverModel.findById(driverID);
+
+    if (!driver) {
+      return res.status(404).json({ message: "Driver not found!" });
+    }
+
+    res.status(200).json({
+      username: driver.username,
+      phone: driver.phone,
+      birthdate: driver.birthdate,
+      blood: driver.blood,
+      license: driver.license,
+      experience: driver.experience,
+      imageUrl: driver.imageUrl,
+      bio: driver.bio,
+      busID: driver.busID,
+      routeID: driver.routeID,
+      from: driver.from,
+      to: driver.to,
+      time: driver.time,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Error retrieving driver data!" });
+  }
+}
+
+export { registerDriver, loginDriver, updateDriverRoute, getDriverData };
