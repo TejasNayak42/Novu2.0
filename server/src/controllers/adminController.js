@@ -173,10 +173,5 @@ export {
   deleteDriver,
   getDriversUnderAdmin,
   addVehicle,
-<<<<<<< HEAD
   getVehicleInfo,
-=======
-  getAllVehicles,
-  updateVehicle,
->>>>>>> 266c8d7aab848a972a7676f47fe2b4c556befc1d
 };
