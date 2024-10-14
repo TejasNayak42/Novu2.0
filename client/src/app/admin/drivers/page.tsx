@@ -24,6 +24,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
 import {
   Select,
   SelectContent,
@@ -44,11 +45,17 @@ interface Driver {
   experience: number;
   imageUrl: string;
   bio: string;
-  busID: string;
+  vehicleID: string;
   routeID: string;
   from: string;
   to: string;
   time: string;
+}
+
+interface Vehicle {
+  _id: string;
+  vehicleId: string;
+  plateNumber: string;
 }
 
 const data = [
@@ -101,9 +108,10 @@ const data = [
 
 const DriversList = () => {
   const [drivers, setDrivers] = useState<Driver[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editingDriver, setEditingDriver] = useState<Driver | null>(null);
+  const [vehicleList, setVehicleList] = useState<Vehicle[]>([]);
 
   useEffect(() => {
     const fetchDrivers = async () => {
@@ -126,12 +134,35 @@ const DriversList = () => {
         setDrivers(data);
       } catch (err: any) {
         setError(err.message);
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchDrivers();
+  }, []);
+
+  useEffect(() => {
+    const fetchVehicles = async () => {
+      try {
+        const response = await fetch("http://localhost:3001/admin/vehicles", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        if (response.ok) {
+          const vehicles = await response.json();
+          console.log("Fetched vehicles:", vehicles);
+          setVehicleList(vehicles);
+        } else {
+          throw new Error("Failed to fetch drivers");
+        }
+      } catch (err: any) {
+        setError(err.message);
+      }
+    };
+
+    fetchVehicles();
   }, []);
 
   const handleDelete = async (driverId: string) => {
@@ -155,7 +186,7 @@ const DriversList = () => {
       if (!res.ok) throw new Error("Failed to delete driver");
     } catch (err: any) {
       setError(err.message);
-      setDrivers((prevDrivers) => [...prevDrivers, ...updatedDrivers]); // Rollback if failed
+      setDrivers((prevDrivers) => [...prevDrivers, ...updatedDrivers]);
     }
   };
 
@@ -172,7 +203,7 @@ const DriversList = () => {
     const updatedDrivers = drivers.map((driver) =>
       driver._id === editingDriver._id ? editingDriver : driver
     );
-    setDrivers(updatedDrivers); // Optimistic update
+    setDrivers(updatedDrivers);
 
     try {
       const res = await fetch(
@@ -188,11 +219,12 @@ const DriversList = () => {
             from: editingDriver.from,
             to: editingDriver.to,
             routeID: editingDriver.routeID,
-            busID: editingDriver.busID,
+            vehicleID: editingDriver.vehicleID,
           }),
         }
       );
       if (!res.ok) throw new Error("Failed to update driver");
+      toast.success("Driver details updated");
     } catch (err: any) {
       setError(err.message);
       setDrivers((prevDrivers) =>
@@ -200,6 +232,7 @@ const DriversList = () => {
           driver._id === editingDriver._id ? driver : editingDriver
         )
       );
+      toast.error("Failed to update driver");
     }
   };
 
@@ -227,7 +260,7 @@ const DriversList = () => {
             <TableHead>Name</TableHead>
             <TableHead>Phone</TableHead>
             <TableHead>Experience</TableHead>
-            <TableHead>Bus ID</TableHead>
+            <TableHead>Vehicle</TableHead>
             <TableHead>Route ID</TableHead>
             <TableHead>From</TableHead>
             <TableHead>To</TableHead>
@@ -252,7 +285,7 @@ const DriversList = () => {
             <TableHead>Name</TableHead>
             <TableHead>Phone</TableHead>
             <TableHead>Experience</TableHead>
-            <TableHead>Bus ID</TableHead>
+            <TableHead>Vehicle</TableHead>
             <TableHead>Route ID</TableHead>
             <TableHead>From</TableHead>
             <TableHead>To</TableHead>
@@ -274,7 +307,7 @@ const DriversList = () => {
           <TableHead>Name</TableHead>
           <TableHead>Phone</TableHead>
           <TableHead>Experience</TableHead>
-          <TableHead>Bus ID</TableHead>
+          <TableHead>Vehicle</TableHead>
           <TableHead>Route ID</TableHead>
           <TableHead>From</TableHead>
           <TableHead>To</TableHead>
@@ -292,7 +325,7 @@ const DriversList = () => {
               <TableCell>{driver.username}</TableCell>
               <TableCell>{driver.phone}</TableCell>
               <TableCell>{driver.experience} years</TableCell>
-              <TableCell>{driver.busID}</TableCell>
+              <TableCell>{driver.vehicleID}</TableCell>
               <TableCell>{driver.routeID}</TableCell>
               <TableCell>{driver.from}</TableCell>
               <TableCell>{driver.to}</TableCell>
@@ -382,18 +415,35 @@ const DriversList = () => {
                         />
                       </div>
                       <div className="grid gap-2">
-                        <Label htmlFor="busID">Bus ID:</Label>
-                        <Input
-                          type="number"
-                          id="busID"
-                          value={editingDriver?.busID || ""}
-                          onChange={(e) =>
+                        <Label htmlFor="vehicle">Vehicle</Label>
+                        <Select
+                          disabled={loading}
+                          value={editingDriver?.vehicleID || undefined}
+                          onValueChange={(value) => {
                             setEditingDriver((prev) =>
-                              prev ? { ...prev, busID: e.target.value } : null
-                            )
-                          }
-                        />
+                              prev ? { ...prev, vehicleID: value } : null
+                            );
+                          }}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select Vehicle" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectLabel>Vehicles</SelectLabel>
+                              {vehicleList.map((vehicle) => (
+                                <SelectItem
+                                  key={vehicle._id}
+                                  value={vehicle.vehicleId}
+                                >
+                                  {vehicle.plateNumber} ({vehicle.vehicleId})
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
                       </div>
+
                       <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <AlertDialogAction type="submit">

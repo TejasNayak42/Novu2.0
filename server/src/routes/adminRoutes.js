@@ -7,6 +7,8 @@ import {
   getVehicleInfo,
   loginAdmin,
   registerAdmin,
+  getAllVehicles,
+  updateVehicle,
 } from "../controllers/adminController.js";
 import { verifyToken } from "../middlwares/jwtMiddleware.js";
 import {
