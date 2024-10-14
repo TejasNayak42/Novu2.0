@@ -153,7 +153,19 @@ async function addVehicle(req, res) {
       .json({ message: "Error creating vehicle", error: error.message });
   }
 }
+async function getVehicleInfo(req, res) {
+  if (!req.user) {
+    return res.status(401).json({ message: "Unauthorized access!" });
+  }
 
+  try {
+    const vehicles = await VehicleModel.find();
+    res.json(vehicles);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error getting vehicles" });
+  }
+}
 export {
   registerAdmin,
   loginAdmin,
@@ -161,4 +173,5 @@ export {
   deleteDriver,
   getDriversUnderAdmin,
   addVehicle,
+  getVehicleInfo,
 };

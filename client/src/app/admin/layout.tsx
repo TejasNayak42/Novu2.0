@@ -284,6 +284,14 @@ export default function AdminLayout({
         </Link>
         <Link
           className={`${
+            pathname === "/admin/add-drivers" ? "bg-background" : ""
+          } px-3 py-2 rounded-sm`}
+          href="/admin/add-vehicle"
+        >
+          Add Vechicles
+        </Link>
+        <Link
+          className={`${
             pathname === "/admin/vehicles" ? "bg-background" : ""
           } px-3 py-2 rounded-sm`}
           href="/admin/vehicles"

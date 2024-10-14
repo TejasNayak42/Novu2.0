@@ -4,6 +4,7 @@ import {
   deleteDriver,
   getDriversUnderAdmin,
   getUserInfo,
+  getVehicleInfo,
   loginAdmin,
   registerAdmin,
 } from "../controllers/adminController.js";
@@ -23,6 +24,7 @@ router.post("/add-vehicle", verifyToken, addVehicle);
 
 router.get("/", verifyToken, getUserInfo);
 router.get("/drivers", verifyToken, getDriversUnderAdmin);
+router.get("/vehicles", verifyToken, getVehicleInfo);
 
 router.patch("/update-driver", verifyToken, updateDriverRoute);
 
